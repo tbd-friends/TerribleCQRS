@@ -18,12 +18,14 @@ namespace TerribleCQRS
         {
             var provider = GetServiceProvider();
 
-            var mediator = provider.GetService<IMediator>(); 
+            var mediator = provider.GetService<IMediator>();
 
             var id = await mediator.Send(new CreateOrder { OrderDate = DateTime.Now, CustomerName = "Bob", ReferenceNumber = "order-1" });
 
             await mediator.Send(new AddLineItem { OrderId = id, Description = "Chicken", Value = 9.99M });
             await mediator.Send(new AddLineItem { OrderId = id, Description = "Waffles", Value = 13.99M });
+
+            await mediator.Send(new CompleteOrder { Id = id, PaymentReference = "1231451kjak1231123zsx" });
         }
 
         private static IServiceProvider GetServiceProvider()

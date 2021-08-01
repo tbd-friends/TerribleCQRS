@@ -16,6 +16,8 @@ namespace TerribleCQRS.Orders
         public string ReferenceNumber { get; private set; }
         public string CustomerName { get; private set; }
         public List<LineItem> LineItems { get; private set; }
+        public OrderStatus Status { get; private set; }
+        public string PaymentReferenceId { get; private set; }
 
         public decimal TotalValue => LineItems.Sum(i => i.Value);
 
@@ -36,6 +38,7 @@ namespace TerribleCQRS.Orders
                 CustomerName = customerName
             });
         }
+
         public void AddLineItem(Guid itemId, string description, decimal value)
         {
             RaiseEvent(new LineItemAdded
@@ -56,11 +59,28 @@ namespace TerribleCQRS.Orders
             });
         }
 
+        public void CompleteAndCheckout()
+        {
+            RaiseEvent(new OrderReadyForPayment
+            {
+                Id = Id
+            });
+        }
+
+        public void ApplyPayment(string referenceId)
+        {
+            RaiseEvent(new OrderCompleted
+            {
+                Id = Id,
+                ReferenceId = referenceId
+            });
+        }
         public void Apply(OrderCreated @event)
         {
             OrderDate = @event.OrderDate;
             ReferenceNumber = @event.ReferenceNumber;
             CustomerName = @event.CustomerName;
+            Status = OrderStatus.InProgress;
         }
 
         public void Apply(LineItemAdded @event)
@@ -71,6 +91,17 @@ namespace TerribleCQRS.Orders
                 Description = @event.Description,
                 Value = @event.Value
             });
+        }
+
+        public void Apply(OrderReadyForPayment @event)
+        {
+            Status = OrderStatus.PendingPayment;
+        }
+
+        public void Apply(OrderCompleted @event)
+        {
+            Status = OrderStatus.Complete;
+            PaymentReferenceId = @event.ReferenceId;
         }
 
         public void Apply(LineItemRemoved @event)
