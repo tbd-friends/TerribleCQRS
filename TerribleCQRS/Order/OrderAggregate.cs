@@ -7,7 +7,7 @@ using TerribleCQRS.Order.Events;
 
 namespace TerribleCQRS.Order
 {
-    public class OrderAggregate : AggregateBase<OrderAggregateRoot>,
+    public class OrderAggregate : AggregateRoot<OrderId>,
         IAccept<OrderCreated>,
         IAccept<LineItemAdded>,
         IAccept<LineItemRemoved>
@@ -19,14 +19,14 @@ namespace TerribleCQRS.Order
 
         public decimal TotalValue => LineItems.Sum(i => i.Value);
 
-        public OrderAggregate(Guid id)
-            : base(new OrderAggregateRoot(id))
+        public OrderAggregate(OrderId orderId)
+            : base(orderId)
         {
             LineItems = new List<LineItem>();
         }
 
-        public OrderAggregate(Guid id, string referenceNumber, DateTime orderDate, string customerName)
-            : this(id)
+        public OrderAggregate(OrderId orderId, string referenceNumber, DateTime orderDate, string customerName)
+            : this(orderId)
         {
             RaiseEvent(new OrderCreated
             {

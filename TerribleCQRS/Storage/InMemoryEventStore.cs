@@ -17,8 +17,7 @@ namespace TerribleCQRS.Storage
             _store = new Dictionary<string, List<IDomainEvent>>();
         }
 
-        public void Save<TId>(AggregateBase<TId> aggregate)
-            where TId : IAggregateRoot
+        public void Save<TId>(AggregateRoot<TId> aggregate)
         {
             var aggregateExists = _store.ContainsKey(aggregate.Id.ToString());
 
@@ -33,8 +32,8 @@ namespace TerribleCQRS.Storage
             }
         }
 
-        public void Load<TAggregate>(TAggregate aggregate)
-            where TAggregate : IAggregate
+        public void Load<TAggregate, TId>(TAggregate aggregate)
+            where TAggregate : AggregateRoot<TId>
         {
             var aggregateExists = _store.ContainsKey(aggregate.Id.ToString());
 
@@ -42,7 +41,7 @@ namespace TerribleCQRS.Storage
             {
                 foreach (var @event in _store[aggregate.Id.ToString()])
                 {
-                    aggregate.Apply(@event);
+                    ((IAggregate)aggregate).Apply(@event);
                 }
             }
         }

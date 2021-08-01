@@ -31,7 +31,7 @@ namespace TerribleCQRS.Order.Query.Handlers
                return false;
            });
 
-            return Task.FromResult(((OrderAggregateRoot)orderByReference).Id);
+            return Task.FromResult(Guid.NewGuid());
         }
     }
 }

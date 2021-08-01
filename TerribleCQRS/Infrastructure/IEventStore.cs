@@ -8,8 +8,9 @@ namespace TerribleCQRS.Infrastructure
 {
     public interface IEventStore
     {
-        void Load<TAggregate>(TAggregate aggregate) where TAggregate : IAggregate;
-        void Save<TId>(AggregateBase<TId> aggregate) where TId : IAggregateRoot;
+        void Save<TId>(AggregateRoot<TId> aggregate);
+        void Load<TAggregate, TId>(TAggregate aggregate)
+            where TAggregate : AggregateRoot<TId>;
         string FindAggregateRootByEvent(Func<IDomainEvent, bool> predicate); // Don't do this for real
     }
 }

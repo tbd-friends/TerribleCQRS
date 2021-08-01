@@ -6,7 +6,7 @@ using TerribleCQRS.Infrastructure;
 
 namespace TerribleCQRS.Order.Commands.Handlers
 {
-    public class CreateOrderHandler : IRequestHandler<CreateOrder>
+    public class CreateOrderHandler : IRequestHandler<CreateOrder, OrderId>
     {
         private readonly IEventStore _store;
 
@@ -15,16 +15,18 @@ namespace TerribleCQRS.Order.Commands.Handlers
             _store = store;
         }
 
-        public Task<Unit> Handle(CreateOrder request, CancellationToken cancellationToken)
+        public Task<OrderId> Handle(CreateOrder request, CancellationToken cancellationToken)
         {
-            var order = new OrderAggregate(Guid.NewGuid(),
+            var id = OrderId.New;
+
+            var order = new OrderAggregate(id,
                 request.ReferenceNumber,
                 request.OrderDate,
                 request.CustomerName);
 
             _store.Save(order);
 
-            return Unit.Task;
+            return Task.FromResult(id);
         }
     }
 }

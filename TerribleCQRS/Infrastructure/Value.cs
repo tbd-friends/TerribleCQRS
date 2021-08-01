@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace TerribleCQRS.Infrastructure
 {
-    public interface IAggregate
+    public abstract class Value<T>
     {
-        IAggregateRoot Id { get; }
-        void Apply(IDomainEvent @event);
     }
 }

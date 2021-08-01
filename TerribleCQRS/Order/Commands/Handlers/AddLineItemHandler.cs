@@ -22,7 +22,7 @@ namespace TerribleCQRS.Order.Commands.Handlers
         {
             var order = new OrderAggregate(request.OrderId);
 
-            _store.Load(order);
+            _store.Load<OrderAggregate, OrderId>(order);
 
             order.AddLineItem(Guid.NewGuid(), request.Description, request.Value);
 
