@@ -1,5 +1,5 @@
 ﻿using System;
-using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Core.Infrastructure;
 
 namespace TerribleCQRS.Orders.ValueTypes
 {
@@ -18,6 +18,11 @@ namespace TerribleCQRS.Orders.ValueTypes
             var components = id.Split("/");
 
             return new OrderId(Guid.Parse(components[1]));
+        }
+
+        public static implicit operator Guid(OrderId id)
+        {
+            return id._value;
         }
 
         public static OrderId New => new OrderId(Guid.NewGuid());

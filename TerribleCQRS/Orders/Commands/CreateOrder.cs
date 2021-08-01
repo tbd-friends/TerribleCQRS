@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using System;
-using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Core.Infrastructure;
 using TerribleCQRS.Orders.ValueTypes;
 
 namespace TerribleCQRS.Orders.Commands

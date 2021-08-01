@@ -1,4 +1,4 @@
-﻿namespace TerribleCQRS.Infrastructure
+﻿namespace TerribleCQRS.Core.Infrastructure
 {
     public interface IAccept<TEvent>
         where TEvent : class

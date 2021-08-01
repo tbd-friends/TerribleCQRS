@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Core.Infrastructure;
 using TerribleCQRS.Orders.Events;
 using TerribleCQRS.Orders.ValueTypes;
 
@@ -30,6 +30,7 @@ namespace TerribleCQRS.Orders
         {
             RaiseEvent(new OrderCreated
             {
+                Id = orderId,
                 OrderDate = orderDate,
                 ReferenceNumber = referenceNumber,
                 CustomerName = customerName
@@ -39,6 +40,7 @@ namespace TerribleCQRS.Orders
         {
             RaiseEvent(new LineItemAdded
             {
+                Id = Id,
                 ItemId = itemId,
                 Description = description,
                 Value = value
@@ -49,7 +51,8 @@ namespace TerribleCQRS.Orders
         {
             RaiseEvent(new LineItemRemoved()
             {
-                Id = itemId
+                Id = Id,
+                ItemId = itemId
             });
         }
 

@@ -1,20 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using TerribleCQRS.Infrastructure;
+using System.Reflection;
+using TerribleCQRS.Core.Infrastructure;
 
 namespace TerribleCQRS.Storage
 {
     public class InMemoryEventStore : IEventStore
     {
         private Dictionary<string, List<IDomainEvent>> _store;
+        private List<IDomainEventSubscriber> _subscribers;
 
         public InMemoryEventStore()
         {
             _store = new Dictionary<string, List<IDomainEvent>>();
+            _subscribers = new List<IDomainEventSubscriber>();
+        }
+
+        public void AddSubscriber(IDomainEventSubscriber subscriber)
+        {
+            _subscribers.Add(subscriber);
         }
 
         public void Save<TId>(AggregateRoot<TId> aggregate)
@@ -29,6 +34,31 @@ namespace TerribleCQRS.Storage
             foreach (var @event in aggregate.UncommittedEvents)
             {
                 _store[aggregate.Id.ToString()].Add(@event);
+
+                ProjectToSubscribers(@event, @event.GetType());
+            }
+        }
+
+        private void ProjectToSubscribers(object @event, Type eventType)
+        {
+            var method = (from m in GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                          where m.IsGenericMethod && m.Name == "ProjectToSubscribers"
+                          select m).SingleOrDefault();
+
+            var invokeMethod = method.MakeGenericMethod(eventType);
+
+            invokeMethod.Invoke(this, new object[] { @event });
+        }
+
+        private void ProjectToSubscribers<TEvent>(TEvent @event)
+            where TEvent : IDomainEvent
+        {
+            if (_subscribers.Any())
+            {
+                foreach (var subscriber in _subscribers)
+                {
+                    subscriber.Project(@event);
+                }
             }
         }
 
@@ -44,21 +74,6 @@ namespace TerribleCQRS.Storage
                     ((IAggregate)aggregate).Apply(@event);
                 }
             }
-        }
-
-        public string FindAggregateRootByEvent(Func<IDomainEvent, bool> predicate)
-        {
-            foreach (var key in _store.Keys)
-            {
-                IDomainEvent result = _store[key].AsQueryable().FirstOrDefault(predicate);
-
-                if (result != null)
-                {
-                    return key;
-                }
-            }
-
-            return null;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TerribleCQRS.Infrastructure
+namespace TerribleCQRS.Core.Infrastructure
 {
     public interface IAggregate
     {
