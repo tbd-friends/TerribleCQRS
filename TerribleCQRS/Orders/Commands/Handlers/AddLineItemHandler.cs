@@ -1,13 +1,11 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Orders.ValueTypes;
 
-namespace TerribleCQRS.Order.Commands.Handlers
+namespace TerribleCQRS.Orders.Commands.Handlers
 {
     public class AddLineItemHandler : IRequestHandler<AddLineItem>
     {
@@ -20,9 +18,9 @@ namespace TerribleCQRS.Order.Commands.Handlers
 
         public Task<Unit> Handle(AddLineItem request, CancellationToken cancellationToken)
         {
-            var order = new OrderAggregate(request.OrderId);
+            var order = new Order(request.OrderId);
 
-            _store.Load<OrderAggregate, OrderId>(order);
+            _store.Load<Order, OrderId>(order);
 
             order.AddLineItem(Guid.NewGuid(), request.Description, request.Value);
 

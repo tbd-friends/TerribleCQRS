@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Orders.ValueTypes;
 
-namespace TerribleCQRS.Order.Commands
+namespace TerribleCQRS.Orders.Commands
 {
     public class AddLineItem : IRequest
     {

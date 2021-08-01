@@ -1,7 +1,7 @@
 ﻿using System;
 using TerribleCQRS.Infrastructure;
 
-namespace TerribleCQRS.Order.Events
+namespace TerribleCQRS.Orders.Events
 {
     public class LineItemAdded : IDomainEvent
     {

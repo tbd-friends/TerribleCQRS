@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using TerribleCQRS.Infrastructure;
-using TerribleCQRS.Order;
-using TerribleCQRS.Order.Commands;
+using TerribleCQRS.Orders;
+using TerribleCQRS.Orders.Commands;
+using TerribleCQRS.Orders.ValueTypes;
 using TerribleCQRS.Storage;
 
 namespace TerribleCQRS
@@ -24,9 +24,9 @@ namespace TerribleCQRS
             await mediator.Send(new AddLineItem { OrderId = id, Description = "Chicken", Value = 9.99M });
             await mediator.Send(new AddLineItem { OrderId = id, Description = "Waffles", Value = 13.99M });
 
-            var order = new OrderAggregate(id);
+            var order = new Order(id);
 
-            eventStore.Load<OrderAggregate, OrderId>(order);
+            eventStore.Load<Order, OrderId>(order);
 
             Console.WriteLine(order.TotalValue);
         }

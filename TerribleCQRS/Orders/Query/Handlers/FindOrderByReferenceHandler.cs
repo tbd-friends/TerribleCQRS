@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TerribleCQRS.Infrastructure;
-using TerribleCQRS.Order.Events;
+using TerribleCQRS.Orders.Events;
 
-namespace TerribleCQRS.Order.Query.Handlers
+namespace TerribleCQRS.Orders.Query.Handlers
 {
     public class FindOrderByReferenceHandler : IRequestHandler<FindOrderByReference, Guid>
     {

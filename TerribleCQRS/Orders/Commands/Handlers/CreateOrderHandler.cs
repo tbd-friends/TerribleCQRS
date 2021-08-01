@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Orders.ValueTypes;
 
-namespace TerribleCQRS.Order.Commands.Handlers
+namespace TerribleCQRS.Orders.Commands.Handlers
 {
     public class CreateOrderHandler : IRequestHandler<CreateOrder, OrderId>
     {
@@ -19,7 +19,7 @@ namespace TerribleCQRS.Order.Commands.Handlers
         {
             var id = OrderId.New;
 
-            var order = new OrderAggregate(id,
+            var order = new Order(id,
                 request.ReferenceNumber,
                 request.OrderDate,
                 request.CustomerName);

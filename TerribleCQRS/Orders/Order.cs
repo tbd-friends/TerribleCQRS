@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TerribleCQRS.Aggregates.ValueTypes;
 using TerribleCQRS.Infrastructure;
-using TerribleCQRS.Order.Events;
+using TerribleCQRS.Orders.Events;
+using TerribleCQRS.Orders.ValueTypes;
 
-namespace TerribleCQRS.Order
+namespace TerribleCQRS.Orders
 {
-    public class OrderAggregate : AggregateRoot<OrderId>,
+    public class Order : AggregateRoot<OrderId>,
         IAccept<OrderCreated>,
         IAccept<LineItemAdded>,
         IAccept<LineItemRemoved>
@@ -19,13 +19,13 @@ namespace TerribleCQRS.Order
 
         public decimal TotalValue => LineItems.Sum(i => i.Value);
 
-        public OrderAggregate(OrderId orderId)
+        public Order(OrderId orderId)
             : base(orderId)
         {
             LineItems = new List<LineItem>();
         }
 
-        public OrderAggregate(OrderId orderId, string referenceNumber, DateTime orderDate, string customerName)
+        public Order(OrderId orderId, string referenceNumber, DateTime orderDate, string customerName)
             : this(orderId)
         {
             RaiseEvent(new OrderCreated

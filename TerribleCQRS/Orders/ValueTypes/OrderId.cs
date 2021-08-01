@@ -1,19 +1,16 @@
 ﻿using System;
+using TerribleCQRS.Infrastructure;
 
-namespace TerribleCQRS.Infrastructure
+namespace TerribleCQRS.Orders.ValueTypes
 {
     public class OrderId : Value<Guid>
     {
-        private readonly Guid _id;
-
-        public OrderId(Guid guid)
-        {
-            _id = guid;
-        }
+        public OrderId(Guid guid) : base(guid)
+        { }
 
         public override string ToString()
         {
-            return $"order/{_id}";
+            return $"order/{_value}";
         }
 
         public static implicit operator OrderId(string id)

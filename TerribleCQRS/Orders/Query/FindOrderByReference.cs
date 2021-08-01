@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System;
 
-namespace TerribleCQRS.Order.Query
+namespace TerribleCQRS.Orders.Query
 {
     public class FindOrderByReference : IRequest<Guid>
     {

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
+using System;
 using TerribleCQRS.Infrastructure;
+using TerribleCQRS.Orders.ValueTypes;
 
-namespace TerribleCQRS.Order.Events
+namespace TerribleCQRS.Orders.Commands
 {
-    public class OrderCreated : IDomainEvent
+    public class CreateOrder : IRequest<OrderId>
     {
         public DateTime OrderDate { get; set; }
         public string ReferenceNumber { get; set; }
